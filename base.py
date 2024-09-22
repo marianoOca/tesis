@@ -2,7 +2,7 @@
 
 from Bio import SeqIO
 import random
-#seed = 10 
+#seed = 10
 seed = 626019
 
 
