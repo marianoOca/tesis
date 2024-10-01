@@ -2,8 +2,6 @@
 
 from Bio import SeqIO
 import random
-#seed = 10
-seed = 626019
 
 
 ### AUX ###
@@ -69,7 +67,7 @@ def show_entry(seq_record:SeqIO.SeqRecord):
 ### RESIZE ###
 
 def copy_with_size(dataset, out_file, size):
-    f = open(out_file, "a")
+    f = open(out_file, "w")
     for seq_record in SeqIO.parse(dataset, "fasta"):
         f.write(">" + seq_record.description + "\n")
         write_with_size(str(seq_record.seq), f, size)
@@ -86,26 +84,26 @@ def sort_to_file(dataset, out_file):
     map_bio(dataset, save_to_list, seq_list)
     seq_list.sort(key = len) #ordena según su largo
     
-    f = open(out_file, "a")
+    f = open(out_file, "w")
     for seq_record in seq_list:
         f.write(">" + seq_record.description + "\n")
         write_with_size(str(seq_record.seq), f)
     f.close()
 
 
-### SUFFLE ###
+### SHUFFLE ###
 
-def suffle_seq(seq_record:SeqIO.SeqRecord, out_file):
+def shuffle_seq(seq_record:SeqIO.SeqRecord, out_file):
     out_file.write(">" + seq_record.description + "\n")
     seq_list = list(str(seq_record.seq))
     random.shuffle(seq_list)
     seq_ran = ''.join(seq_list) #no se xq no funciona con str(seq_list)
     write_with_size(seq_ran, out_file)
 
-def suffle_to_file(dataset, out_file):
+def shuffle_to_file(dataset, out_file, seed = 1):
     random.seed(seed)
-    f = open(out_file, "a")
-    map_bio(dataset, suffle_seq, f)
+    f = open(out_file, "w")
+    map_bio(dataset, shuffle_seq, f)
     f.close()
 
 
@@ -121,7 +119,7 @@ def random_seq(seq_record:SeqIO.SeqRecord, out_file):
     random_seq = ''.join(random_list)
     write_with_size(random_seq, out_file)
 
-def random_to_file(dataset, out_file):
+def random_to_file(dataset, out_file, seed = 1):
     random.seed(seed)
     f = open(out_file, "w")
     map_bio(dataset, random_seq, f)
@@ -157,3 +155,43 @@ def icalc_to_list(dataset):
     icalc_list = []
     map_bio(dataset, icalc_to_list_aux, icalc_list)
     return icalc_list
+
+
+## EXPERIMENT ##
+
+def generate_working_files(origin_dataset, exp : str, cuantity : int):
+    for i in range(1, cuantity + 1):
+        if i < 10:
+            sufix = "_" + exp + "0" + str(i) + ".fasta"
+        else:
+            sufix = "_" + exp + str(i) + ".fasta"
+
+        if exp == "s":
+            shuffle_to_file(origin_dataset + ".fasta", origin_dataset + sufix, i)
+        if exp == "r":
+            random_to_file(origin_dataset + ".fasta", origin_dataset + sufix, i)
+
+
+def calculate_icalc_from_files(origin_dataset, cuantity : int):
+    for i in range(1, cuantity + 1):
+        if i < 10:
+            working_dataset = origin_dataset + "0" + str(i)
+        else:
+            working_dataset = origin_dataset + str(i)
+        
+        icalc_list =  icalc_to_list(working_dataset + ".fasta")
+        save_list_to_file(icalc_list, "icalc_" + working_dataset + ".txt")
+
+#exp = s: shuffle y exp = r:random
+def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
+    if exp != "s_and_r":
+        generate_working_files(dataset, exp, cuantity)
+        calculate_icalc_from_files(dataset + "_" + exp, cuantity)
+    else:
+        icalc_list =  icalc_to_list(dataset + ".fasta")
+        save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
+
+        generate_working_files(dataset, "s", cuantity)
+        calculate_icalc_from_files(dataset + "_s", cuantity)
+        generate_working_files(dataset, "r", cuantity)
+        calculate_icalc_from_files(dataset + "_r", cuantity)
