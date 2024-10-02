@@ -160,7 +160,9 @@ def icalc_to_list(dataset):
 ## EXPERIMENT ##
 
 def generate_working_files(origin_dataset, exp : str, cuantity : int):
+    print("Generating " + str(exp) + " files...\n")
     for i in range(1, cuantity + 1):
+        print("Generating " + str(i) + " of "+ str(cuantity) + "\n")
         if i < 10:
             sufix = "_" + exp + "0" + str(i) + ".fasta"
         else:
@@ -173,7 +175,9 @@ def generate_working_files(origin_dataset, exp : str, cuantity : int):
 
 
 def calculate_icalc_from_files(origin_dataset, cuantity : int):
+    print("Calculating icals\n")
     for i in range(1, cuantity + 1):
+        print("Calculating " + str(i) + " of "+ str(cuantity) + "\n")
         if i < 10:
             working_dataset = origin_dataset + "0" + str(i)
         else:
@@ -188,6 +192,10 @@ def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
         generate_working_files(dataset, exp, cuantity)
         calculate_icalc_from_files(dataset + "_" + exp, cuantity)
     else:
+        print("Calculating sizes\n")
+        sizes = size_to_list(dataset + ".fasta")
+        save_list_to_file(sizes, "sizes_" + dataset + ".txt")
+        print("Calculating icalcs from orginial dataset\n")
         icalc_list =  icalc_to_list(dataset + ".fasta")
         save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
 
