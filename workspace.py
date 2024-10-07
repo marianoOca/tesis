@@ -23,8 +23,8 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 
 
 
-
-experiment("usp_f")
+if __name__ == "__main__":
+  experiment("usp_f")
 
 
 
