@@ -1,6 +1,7 @@
 # Requeriments: pip install Bio
 
 from Bio import SeqIO
+import multiprocessing as mp
 import random
 
 
@@ -44,6 +45,13 @@ def filter_to_file(dataset, out_file):
             f.write(">" + seq_record.description + "\n")
             write_with_size(str(seq_record.seq), f)
     f.close()
+
+def make_name(base:str, num:int, sufix:str = ""):
+    if num < 10:
+        middle = "0" + str(num)
+    else:
+        middle = str(num)
+    return base + middle + sufix
 
 ### MAP DATASET ###
 
@@ -157,34 +165,65 @@ def icalc_to_list(dataset):
     return icalc_list
 
 
+## EXPERIMENT ## SORT OF CURRY ##
+
+def mapeable_to_file(l:list): #[exp:srt, ori:str, dest:str, seed:int]
+    exp = l[0]
+    origin_file = l[1]
+    destination_file = l[2]
+    seed = l[3]
+    if exp == "s":
+        shuffle_to_file(origin_file, destination_file, seed)
+    if exp == "r":
+        random_to_file(origin_file, destination_file, seed)
+
+def icalc_to_file(l:list): #[ori:str, dest:str]
+    working_dataset = l[0]
+    destination_file = l[1]
+    icalcs = icalc_to_list(working_dataset)
+    save_list_to_file(icalcs, destination_file)
+
+
+## EXPERIMENT ## MULTIPROCESSING ##
+
+def multiprocess(function, data:list, message:str):
+    print(message)
+    
+    cant_processes = mp.cpu_count()
+    pool = mp.Pool(processes = cant_processes)      #generamos workers como núcleos del procesador tengamos
+
+    results = []
+    for i in range(0, len(data), cant_processes):
+        print("Generating " + str(i+1) + " to " + str(i+cant_processes if i+cant_processes < len(data) else len(data)) + " of "+ str(len(data)))
+        chunk = data[i:i+cant_processes]            #se divide el workload en bloques de tamaño cant_processes, llamados chunks
+        chunk_results = pool.map(function, chunk)   #se procesa cada chunk sincrónicamente
+        results.extend(chunk_results)
+    pool.close()
+    pool.join()
+
+    return results
+
+
 ## EXPERIMENT ##
 
 def generate_working_files(origin_dataset, exp : str, cuantity : int):
-    print("Generating " + str(exp) + " files...\n")
-    for i in range(1, cuantity + 1):
-        print("Generating " + str(i) + " of "+ str(cuantity) + "\n")
-        if i < 10:
-            sufix = "_" + exp + "0" + str(i) + ".fasta"
-        else:
-            sufix = "_" + exp + str(i) + ".fasta"
+    files_to_generate = []
+    for i in range(cuantity):
+        destination_file = make_name(origin_dataset + "_" + exp, i+1, ".fasta")
+        files_to_generate.append([exp, origin_dataset + ".fasta", destination_file, i+1])
 
-        if exp == "s":
-            shuffle_to_file(origin_dataset + ".fasta", origin_dataset + sufix, i)
-        if exp == "r":
-            random_to_file(origin_dataset + ".fasta", origin_dataset + sufix, i)
+    multiprocess(mapeable_to_file, files_to_generate, "\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
 
 
 def calculate_icalc_from_files(origin_dataset, cuantity : int):
-    print("Calculating icals\n")
-    for i in range(1, cuantity + 1):
-        print("Calculating " + str(i) + " of "+ str(cuantity) + "\n")
-        if i < 10:
-            working_dataset = origin_dataset + "0" + str(i)
-        else:
-            working_dataset = origin_dataset + str(i)
-        
-        icalc_list =  icalc_to_list(working_dataset + ".fasta")
-        save_list_to_file(icalc_list, "icalc_" + working_dataset + ".txt")
+    files_to_process = []
+    for i in range(cuantity):
+        working_dataset = make_name(origin_dataset, i+1, ".fasta")
+        destination_file = make_name("icalc_" + origin_dataset, i+1, ".txt")
+        files_to_process.append([working_dataset, destination_file])
+
+    multiprocess(icalc_to_file, files_to_process, "\nCalculating icals:")
+
 
 #exp = s: shuffle y exp = r:random
 def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
@@ -192,10 +231,10 @@ def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
         generate_working_files(dataset, exp, cuantity)
         calculate_icalc_from_files(dataset + "_" + exp, cuantity)
     else:
-        print("Calculating sizes\n")
+        print("\nCalculating sizes")
         sizes = size_to_list(dataset + ".fasta")
         save_list_to_file(sizes, "sizes_" + dataset + ".txt")
-        print("Calculating icalcs from orginial dataset\n")
+        print("\nCalculating icalcs from orginial dataset")
         icalc_list =  icalc_to_list(dataset + ".fasta")
         save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
 
