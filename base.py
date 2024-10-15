@@ -157,12 +157,39 @@ def show_icalc(seq_record:SeqIO.SeqRecord):
     print("Icalc: ", icalc(str(seq_record.seq)))
 
 def icalc_to_list_aux(seq_record:SeqIO.SeqRecord, res:list):
-    res.append(icalc(str(seq_record.seq)))
+    #res.append(icalc(str(seq_record.seq)))
+    res.append(discrepancy(str(seq_record.seq)))
 
 def icalc_to_list(dataset):
     icalc_list = []
     map_bio(dataset, icalc_to_list_aux, icalc_list)
     return icalc_list
+
+
+### DISCREPANCY ###
+def aux_discrepancy_for_2(seq:str, pos:str, neg:str) -> int:
+    res = 0
+    maxEnding = 0
+
+    for i in range(len(seq)):
+        to_add = 1 if seq[i] == pos else (-1 if seq[i] == neg else 0)
+        maxEnding = max(maxEnding + to_add, to_add)
+
+        res = max(res, maxEnding)
+
+    return res
+
+
+def discrepancy(seq:str) -> int:
+    alphabet = {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}
+    res = 0
+
+    for i in alphabet:
+        remaining_alphabet = alphabet - {i}
+        for j in remaining_alphabet:
+            res = max(res, aux_discrepancy_for_2(seq, i, j))
+    
+    return res
 
 
 ## EXPERIMENT ## SORT OF CURRY ##
@@ -231,14 +258,15 @@ def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
         generate_working_files(dataset, exp, cuantity)
         calculate_icalc_from_files(dataset + "_" + exp, cuantity)
     else:
-        print("\nCalculating sizes")
+        '''print("\nCalculating sizes")
         sizes = size_to_list(dataset + ".fasta")
         save_list_to_file(sizes, "sizes_" + dataset + ".txt")
+        '''
         print("\nCalculating icalcs from orginial dataset")
         icalc_list =  icalc_to_list(dataset + ".fasta")
         save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
 
-        generate_working_files(dataset, "s", cuantity)
+        #generate_working_files(dataset, "s", cuantity)
         calculate_icalc_from_files(dataset + "_s", cuantity)
-        generate_working_files(dataset, "r", cuantity)
+        #generate_working_files(dataset, "r", cuantity)
         calculate_icalc_from_files(dataset + "_r", cuantity)
