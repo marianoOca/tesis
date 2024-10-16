@@ -12,7 +12,7 @@ def save_list_to_file(l:list, out_file):
         file.write(f"{n}\n")
     file.close()
 
-def read_list_from_file(in_file):
+def read_list_from_file(in_file) -> list:
     res = []
     file =  open(in_file, 'r')
     for line in file:
@@ -33,7 +33,7 @@ def write_with_size(seq:str, out_file, size:int = 100):
 def size_to_list_aux(seq_record:SeqIO.SeqRecord, res:list):
     res.append(len(seq_record))
 
-def size_to_list(dataset):
+def size_to_list(dataset) -> list:
     size_list = []
     map_bio(dataset, size_to_list_aux, size_list)
     return size_list
@@ -46,12 +46,12 @@ def filter_to_file(dataset, out_file):
             write_with_size(str(seq_record.seq), f)
     f.close()
 
-def make_name(base:str, num:int, sufix:str = ""):
+def make_name(prefix:str, num:int, sufix:str = "") -> str:
     if num < 10:
         middle = "0" + str(num)
     else:
         middle = str(num)
-    return base + middle + sufix
+    return prefix + middle + sufix
 
 ### MAP DATASET ###
 
@@ -74,7 +74,7 @@ def show_entry(seq_record:SeqIO.SeqRecord):
 
 ### RESIZE ###
 
-def copy_with_size(dataset, out_file, size):
+def copy_with_size(dataset, out_file, size:int):
     f = open(out_file, "w")
     for seq_record in SeqIO.parse(dataset, "fasta"):
         f.write(">" + seq_record.description + "\n")
@@ -136,7 +136,7 @@ def random_to_file(dataset, out_file, seed = 1):
 
 ### ICALC ###
 
-def icalc(seq:str):
+def icalc(seq:str) -> float:
     b = []
     for i in range(len(seq)):
         mr = 0
@@ -160,7 +160,7 @@ def icalc_to_list_aux(seq_record:SeqIO.SeqRecord, res:list):
     #res.append(icalc(str(seq_record.seq)))
     res.append(discrepancy(str(seq_record.seq)))
 
-def icalc_to_list(dataset):
+def icalc_to_list(dataset) -> list:
     icalc_list = []
     map_bio(dataset, icalc_to_list_aux, icalc_list)
     return icalc_list
@@ -178,7 +178,6 @@ def aux_discrepancy_for_2(seq:str, pos:str, neg:str) -> int:
         res = max(res, maxEnding)
 
     return res
-
 
 def discrepancy(seq:str) -> int:
     alphabet = {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}
@@ -213,7 +212,7 @@ def icalc_to_file(l:list): #[ori:str, dest:str]
 
 ## EXPERIMENT ## MULTIPROCESSING ##
 
-def multiprocess(function, data:list, message:str):
+def multiprocess(function, data:list, message:str) -> list:
     print(message)
     
     cant_processes = mp.cpu_count()
@@ -246,7 +245,8 @@ def calculate_icalc_from_files(origin_dataset, cuantity : int):
     files_to_process = []
     for i in range(cuantity):
         working_dataset = make_name(origin_dataset, i+1, ".fasta")
-        destination_file = make_name("icalc_" + origin_dataset, i+1, ".txt")
+        #destination_file = make_name("icalc_" + origin_dataset, i+1, ".txt")
+        destination_file = make_name("discr_" + origin_dataset, i+1, ".txt")
         files_to_process.append([working_dataset, destination_file])
 
     multiprocess(icalc_to_file, files_to_process, "\nCalculating icals:")
@@ -264,7 +264,8 @@ def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
         '''
         print("\nCalculating icalcs from orginial dataset")
         icalc_list =  icalc_to_list(dataset + ".fasta")
-        save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
+        #save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
+        save_list_to_file(icalc_list, "discr_" + dataset + ".txt")
 
         #generate_working_files(dataset, "s", cuantity)
         calculate_icalc_from_files(dataset + "_s", cuantity)
