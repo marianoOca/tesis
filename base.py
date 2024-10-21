@@ -30,12 +30,10 @@ def write_with_size(seq:str, out_file, size:int = 100):
         i = i + size
     out_file.write(seq[i-size:] + "\n\n")
 
-def size_to_list_aux(seq_record:SeqIO.SeqRecord, res:list):
-    res.append(len(seq_record))
-
 def size_to_list(dataset) -> list:
+    print("\nCalculating sizes")
     size_list = []
-    map_bio(dataset, size_to_list_aux, size_list)
+    map_bio(dataset, lambda seq_record, res : res.append(len(seq_record)), size_list)
     return size_list
 
 def filter_to_file(dataset, out_file):
@@ -156,18 +154,10 @@ def show_icalc(seq_record:SeqIO.SeqRecord):
     print(seq_record.description)
     print("Icalc: ", icalc(str(seq_record.seq)))
 
-def icalc_to_list_aux(seq_record:SeqIO.SeqRecord, res:list):
-    #res.append(icalc(str(seq_record.seq)))
-    res.append(discrepancy(str(seq_record.seq)))
-
-def icalc_to_list(dataset) -> list:
-    icalc_list = []
-    map_bio(dataset, icalc_to_list_aux, icalc_list)
-    return icalc_list
-
 
 ### DISCREPANCY ###
-def aux_discrepancy_for_2(seq:str, pos:str, neg:str) -> int:
+
+def Kadane_for_2(seq:str, pos:str, neg:str) -> int:
     res = 0
     maxEnding = 0
 
@@ -186,8 +176,8 @@ def discrepancy(seq:str) -> int:
     for i in alphabet:
         remaining_alphabet = alphabet - {i}
         for j in remaining_alphabet:
-            res = max(res, aux_discrepancy_for_2(seq, i, j))
-    
+            res = max(res, Kadane_for_2(seq, i, j))
+
     return res
 
 
@@ -198,16 +188,34 @@ def mapeable_to_file(l:list): #[exp:srt, ori:str, dest:str, seed:int]
     origin_file = l[1]
     destination_file = l[2]
     seed = l[3]
-    if exp == "s":
+    if   exp == "s":
         shuffle_to_file(origin_file, destination_file, seed)
-    if exp == "r":
+    elif exp == "r":
         random_to_file(origin_file, destination_file, seed)
 
-def icalc_to_file(l:list): #[ori:str, dest:str]
+class Info:
+    def __init__(self, complexity:str):
+        if   complexity == "i":
+            self.prefix = "icalc_"
+            self.name = "icalc"
+            self.function = icalc
+        elif complexity == "d":
+            self.prefix = "discr_"
+            self.name = "discrepancia"
+            self.function = discrepancy
+
+def complexity_to_list(dataset, complexity:str) -> list:
+    res_list = []
+    f = Info(complexity).function
+    map_bio(dataset, lambda seq_record, res : res.append(f(str(seq_record.seq))), res_list)
+    return res_list
+
+def complexity_to_file(l:list): #[ori:str, dest:str, complexity:str]
     working_dataset = l[0]
     destination_file = l[1]
-    icalcs = icalc_to_list(working_dataset)
-    save_list_to_file(icalcs, destination_file)
+    complexity = l[2]
+    res = complexity_to_list(working_dataset, complexity)
+    save_list_to_file(res, destination_file)
 
 
 ## EXPERIMENT ## MULTIPROCESSING ##
@@ -232,7 +240,7 @@ def multiprocess(function, data:list, message:str) -> list:
 
 ## EXPERIMENT ##
 
-def generate_working_files(origin_dataset, exp : str, cuantity : int):
+def generate_working_files(origin_dataset, exp:str, cuantity:int):
     files_to_generate = []
     for i in range(cuantity):
         destination_file = make_name(origin_dataset + "_" + exp, i+1, ".fasta")
@@ -240,34 +248,38 @@ def generate_working_files(origin_dataset, exp : str, cuantity : int):
 
     multiprocess(mapeable_to_file, files_to_generate, "\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
 
-
-def calculate_icalc_from_files(origin_dataset, cuantity : int):
+#cuantity = 0: se está trabajando sobre el archivo original
+def calculate_complexity_from_files(origin_dataset, complexity:str, cuantity:int = 0):
     files_to_process = []
-    for i in range(cuantity):
-        working_dataset = make_name(origin_dataset, i+1, ".fasta")
-        #destination_file = make_name("icalc_" + origin_dataset, i+1, ".txt")
-        destination_file = make_name("discr_" + origin_dataset, i+1, ".txt")
-        files_to_process.append([working_dataset, destination_file])
+    info = Info(complexity)
 
-    multiprocess(icalc_to_file, files_to_process, "\nCalculating icals:")
-
-
-#exp = s: shuffle y exp = r:random
-def experiment(dataset, exp : str = "s_and_r", cuantity : int = 10):
-    if exp != "s_and_r":
-        generate_working_files(dataset, exp, cuantity)
-        calculate_icalc_from_files(dataset + "_" + exp, cuantity)
+    if cuantity == 0:
+        print("\nCalculating " + info.name + " from orginial dataset")
+        complexity_to_file([origin_dataset + ".fasta", "results/" + info.prefix + origin_dataset + ".txt", complexity])
     else:
-        '''print("\nCalculating sizes")
-        sizes = size_to_list(dataset + ".fasta")
-        save_list_to_file(sizes, "sizes_" + dataset + ".txt")
-        '''
-        print("\nCalculating icalcs from orginial dataset")
-        icalc_list =  icalc_to_list(dataset + ".fasta")
-        #save_list_to_file(icalc_list, "icalc_" + dataset + ".txt")
-        save_list_to_file(icalc_list, "discr_" + dataset + ".txt")
+        for i in range(cuantity):
+            working_dataset = make_name(origin_dataset, i+1, ".fasta")
+            destination_file = make_name(info.prefix + origin_dataset, i+1, ".txt")
+            files_to_process.append([working_dataset, "results/" + destination_file, complexity])
 
-        #generate_working_files(dataset, "s", cuantity)
-        calculate_icalc_from_files(dataset + "_s", cuantity)
-        #generate_working_files(dataset, "r", cuantity)
-        calculate_icalc_from_files(dataset + "_r", cuantity)
+        multiprocess(complexity_to_file, files_to_process, "\nCalculating " + info.name + " for " + str(cuantity) + " files:")
+
+
+#exp = "s": shuffle y exp = "r":random
+#complexity = "i":icalc y complexity = "d":discrepancia
+#gen indica si se debe generar los datos de prueba random y/o shuffled
+def experiment(dataset, complexity:str, exp:str = "s_and_r", gen:bool = False, cuantity:int = 10):
+    if exp != "s_and_r":
+        if gen:
+            generate_working_files(dataset, exp, cuantity)
+        calculate_complexity_from_files(dataset + "_" + exp, complexity, cuantity)
+    else:
+        if gen:
+            sizes = size_to_list(dataset + ".fasta")
+            save_list_to_file(sizes, "sizes_" + dataset + ".txt")
+            generate_working_files(dataset, "s", cuantity)
+            generate_working_files(dataset, "r", cuantity)
+
+        calculate_complexity_from_files(dataset, complexity)
+        calculate_complexity_from_files(dataset + "_s", complexity, cuantity)
+        calculate_complexity_from_files(dataset + "_r", complexity, cuantity)

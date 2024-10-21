@@ -25,7 +25,9 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 
 if __name__ == "__main__":
   #experiment("usp_f")
-  experiment("ls_orchid")
+  #experiment("ls_orchid", complexity="d", cuantity=3)
+  #print(complexity_to_list("ls_orchid_r05.fasta", "d"))
+  print(size_to_list("ls_orchid.fasta"))
 
 
 
