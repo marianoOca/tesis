@@ -51,6 +51,12 @@ def make_name(prefix:str, num:int, sufix:str = "") -> str:
         middle = str(num)
     return prefix + middle + sufix
 
+def count_entries(dataset):
+    res = []
+    map_bio(dataset, lambda _, res : res.append(1), res)
+    return len(res)
+
+
 ### MAP DATASET ###
 
 def map_bio(dataset, function, auxVar = False):
@@ -157,26 +163,39 @@ def show_icalc(seq_record:SeqIO.SeqRecord):
 
 ### DISCREPANCY ###
 
-def Kadane_for_2(seq:str, pos:str, neg:str) -> int:
+def Kadane_for_2blocks(seq:str, pos:str, neg:str) -> int:
     res = 0
     maxEnding = 0
+    pos_index = 0
+    neg_index = 0
 
-    for i in range(len(seq)):
-        to_add = 1 if seq[i] == pos else (-1 if seq[i] == neg else 0)
+    for i in range(len(seq)-len(pos)+1):
+        if seq[i:i+len(pos)] == pos and i >= pos_index:
+            to_add = 1
+            pos_index = i + len(pos)
+        elif seq[i:i+len(pos)] == neg and i >= neg_index:
+            to_add = -1
+            neg_index = i + len(pos)
+        else:
+            to_add = 0
         maxEnding = max(maxEnding + to_add, to_add)
 
         res = max(res, maxEnding)
 
     return res
 
-def discrepancy(seq:str) -> int:
+
+def discrepancy(seq:str, block_size:int = 1) -> int:
     alphabet = {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}
     res = 0
+
+    for _ in range(block_size-1):
+        alphabet = {i + j for i in alphabet for j in {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}}
 
     for i in alphabet:
         remaining_alphabet = alphabet - {i}
         for j in remaining_alphabet:
-            res = max(res, Kadane_for_2(seq, i, j))
+            res = max(res, Kadane_for_2blocks(seq, i, j))
 
     return res
 
@@ -203,6 +222,15 @@ class Info:
             self.prefix = "discr_"
             self.name = "discrepancia"
             self.function = discrepancy
+        elif complexity == "d2":
+            self.prefix = "disc2_"
+            self.name = "discrepancia en bloque de 2"
+            self.function = lambda seq : discrepancy(seq, 2)
+        elif complexity == "d3":
+            self.prefix = "disc3_"
+            self.name = "discrepancia en bloque de 3"
+            self.function = lambda seq : discrepancy(seq, 3)
+        
 
 def complexity_to_list(dataset, complexity:str) -> list:
     res_list = []
