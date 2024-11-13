@@ -24,13 +24,13 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 
 
 if __name__ == "__main__":
-
-  experiment("usp_f", complexity="d2")
-  experiment("usp_f", complexity="d3")
-  #experiment("ls_orchid", complexity="d2", cuantity=5)
-  #experiment("ls_orchid", complexity="d3", cuantity=5)
-  #print(complexity_to_list("ls_orchid_r05.fasta", "d"))
-  #print(size_to_list("ls_orchid.fasta"))
+    experiment("usp_f", complexity="d2")
+    experiment("usp_f", complexity="d3")
+    experiment("usp_f", complexity="d4")
+    #experiment("ls_orchid", complexity="d2", cuantity=3)
+    #experiment("ls_orchid", complexity="d3", cuantity=5)
+    #print(complexity_to_list("ls_orchid_r05.fasta", "d"))
+    #print(size_to_list("ls_orchid.fasta"))
 
 
 

@@ -187,13 +187,14 @@ def Kadane_for_2blocks(seq:str, pos:str, neg:str) -> int:
 
 def discrepancy(seq:str, block_size:int = 1) -> int:
     alphabet = {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}
+    working_alph = alphabet.copy()
     res = 0
 
     for _ in range(block_size-1):
-        alphabet = {i + j for i in alphabet for j in {"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"}}
+        working_alph = {i + j for i in working_alph for j in alphabet}
 
-    for i in alphabet:
-        remaining_alphabet = alphabet - {i}
+    for i in working_alph:
+        remaining_alphabet = working_alph - {i}
         for j in remaining_alphabet:
             res = max(res, Kadane_for_2blocks(seq, i, j))
 
@@ -230,6 +231,10 @@ class Info:
             self.prefix = "disc3_"
             self.name = "discrepancia en bloque de 3"
             self.function = lambda seq : discrepancy(seq, 3)
+        elif complexity == "d4":
+            self.prefix = "disc4_"
+            self.name = "discrepancia en bloque de 4"
+            self.function = lambda seq : discrepancy(seq, 4)
         
 
 def complexity_to_list(dataset, complexity:str) -> list:
