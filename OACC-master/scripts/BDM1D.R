@@ -1,10 +1,10 @@
 library(acss)
 
 #Directories are changed to work from phython
-maxKnownKs <- read.csv("data/maxKnownKs.csv")
+maxKnownKs <- read.csv("OACC-master/data/maxKnownKs.csv")
 maxKnownKs$X <- NULL
 
-ldData <- read.csv("data/logicalDepthsBinaryStrings.csv", 
+ldData <- read.csv("OACC-master/data/logicalDepthsBinaryStrings.csv", 
                    colClasses = c('character',"numeric"))
 
 colnames(ldData)        <- c('string','ld')

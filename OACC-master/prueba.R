@@ -1,7 +1,7 @@
 
 #Directories are changed to work from phython
-source("scripts/BDM1D.R")
-source("scripts/compressionLength.R")
+source("OACC-master/scripts/BDM1D.R")
+source("OACC-master/scripts/compressionLength.R")
 
 my_function <- function(bdmInputString) {
   bdmAlphabet <- 256
