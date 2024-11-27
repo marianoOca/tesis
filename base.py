@@ -1,25 +1,37 @@
 # Requeriments: pip install Bio
+# Requeriments: pip install rpy2
 
 from Bio import SeqIO
 import multiprocessing as mp
+#import os
 import random
 
 
 ### AUX ###
 def save_list_to_file(l:list, out_file):
     file = open(out_file, 'w')
-    for n in l:
-        file.write(f"{n}\n")
+    
+    if type(l[0]) != list:
+        for n in l:
+            file.write(f"{n}\n")
+    else:
+        for row in l:
+            file.write(",".join(map(str, row)) + "\n")
     file.close()
 
 def read_list_from_file(in_file) -> list:
     res = []
     file =  open(in_file, 'r')
-    for line in file:
-        num = float(line.strip())
-        if num.is_integer():
-            num = int(num)
-        res.append(num)
+    if in_file[len(in_file)-4:] == ".csv":
+        for line in file:
+            row = line.strip().split(",")
+            res.append(row)
+    else:
+        for line in file:
+            num = float(line.strip())
+            if num.is_integer():
+                num = int(num)
+            res.append(num)
     file.close()
     return res
 
@@ -201,6 +213,11 @@ def discrepancy(seq:str, block_size:int = 1) -> int:
     return res
 
 
+### DISCREPANCY ###
+
+def bdm(seq:str, block_size:int = 1) -> list:
+    seq
+
 ## EXPERIMENT ## SORT OF CURRY ##
 
 def mapeable_to_file(l:list): #[exp:srt, ori:str, dest:str, seed:int]
@@ -235,6 +252,10 @@ class Info:
             self.prefix = "disc4_"
             self.name = "discrepancia en bloque de 4"
             self.function = lambda seq : discrepancy(seq, 4)
+        elif complexity == "b":
+            self.prefix = "decom_"
+            self.name = "Block Decomposition Method"
+            self.function = bdm
         
 
 def complexity_to_list(dataset, complexity:str) -> list:
