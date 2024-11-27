@@ -3,7 +3,7 @@
 source("OACC-master/scripts/BDM1D.R")
 source("OACC-master/scripts/compressionLength.R")
 
-my_function <- function(bdmInputString) {
+bennett <- function(bdmInputString) {
   bdmAlphabet <- 256
   blockSize <- 12
   blockOverlap <- 0
