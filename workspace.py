@@ -22,38 +22,7 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 #save_list_to_file(icalcs_random, "icalcs_usp_f_r.txt")
 
 if __name__ == "__main__":
-    import rpy2.robjects as ro
-
-    # Load the R script
-    ro.r['source']('OACC-master/prueba.R')
-
-    # Access the R function
-    my_function = ro.r['my_function']
-
-    # Call the function with parameters
-    param = "MTTQAPTFTQPLQSVVVLEGSTATFEAHISGFPVPEVSWFRDGQVISTSTLPGVQISFSDGRAKLTIPAVTKANSGRYSLKATNGSGQATSTAELLVKAETAPPNFVQRLQSMTVRQGSQVRLQVRVTGIPTPVVKFYRDGAEIQSSLDFQISQEGDLY"
-
-    # The function returns an R data.frame
-    result = my_function(param)
-
-    # Convert the R data.frame to a list of lists, including headers
-    #result_list = [list(result.names)]  # Gets cols names
-    result_list = []
-    result_list.extend(map(list, zip(*result))) #Gets remaining data
-    #result_list = list(result)
-    
-    print(result_list)
-    
-    from rpy2.robjects import pandas2ri
-    import re
-
-    # Extract the 'value' column as a Python list
-    value_column = list(result.rx2('values'))
-
-    # Extract numeric values using a regular expression
-    numbers = [float(re.search(r'[0-9.]+', str(item)).group()) for item in value_column]
-    print(numbers)
-
+    experiment("usp_f", complexity="b")
     '''
     experiment("usp_f", complexity="d2")
     experiment("usp_f", complexity="d3")

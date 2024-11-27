@@ -1,10 +1,15 @@
 # Requeriments: pip install Bio
 # Requeriments: pip install rpy2
+# Requeriments R: install(acss)
 
 from Bio import SeqIO
 import multiprocessing as mp
 #import os
 import random
+
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+import re
 
 
 ### AUX ###
@@ -213,10 +218,20 @@ def discrepancy(seq:str, block_size:int = 1) -> int:
     return res
 
 
-### DISCREPANCY ###
+### BENNETT / Block Decomposition Method ###
 
-def bdm(seq:str, block_size:int = 1) -> list:
-    seq
+def bdm(seq:str) -> list:
+    ro.r['source']('OACC-master/bennett.R')     # Carga el script en R
+    bennett = ro.r['bennett']                   # Accede a la funcuón de R
+    result = bennett(seq)                       # la función devuelve un data.frame de R
+
+    # Extract the 'value' column as a Python list
+    value_column = list(result.rx2('values'))
+    # Extract numeric values using a regular expression
+    numbers = [float(re.search(r'[0-9.]+', str(item)).group()) for item in value_column]
+    
+    return numbers
+
 
 ## EXPERIMENT ## SORT OF CURRY ##
 
@@ -232,6 +247,7 @@ def mapeable_to_file(l:list): #[exp:srt, ori:str, dest:str, seed:int]
 
 class Info:
     def __init__(self, complexity:str):
+        self.extension = ".txt" #funciones que devuelven un sólo parámetro
         if   complexity == "i":
             self.prefix = "icalc_"
             self.name = "icalc"
@@ -256,6 +272,7 @@ class Info:
             self.prefix = "decom_"
             self.name = "Block Decomposition Method"
             self.function = bdm
+            self.extension = ".csv" #funciones que devuelven más de un parámetro (como list)
         
 
 def complexity_to_list(dataset, complexity:str) -> list:
@@ -309,11 +326,11 @@ def calculate_complexity_from_files(origin_dataset, complexity:str, cuantity:int
 
     if cuantity == 0:
         print("\nCalculating " + info.name + " from orginial dataset")
-        complexity_to_file([origin_dataset + ".fasta", "results/" + info.prefix + origin_dataset + ".txt", complexity])
+        complexity_to_file([origin_dataset + ".fasta", "results/" + info.prefix + origin_dataset + info.extension, complexity])
     else:
         for i in range(cuantity):
             working_dataset = make_name(origin_dataset, i+1, ".fasta")
-            destination_file = make_name(info.prefix + origin_dataset, i+1, ".txt")
+            destination_file = make_name(info.prefix + origin_dataset, i+1, info.extension)
             files_to_process.append([working_dataset, "results/" + destination_file, complexity])
 
         multiprocess(complexity_to_file, files_to_process, "\nCalculating " + info.name + " for " + str(cuantity) + " files:")
