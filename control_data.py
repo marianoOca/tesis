@@ -59,9 +59,9 @@ def shuffle_to_file(dataset, out_file, seed = 1):
 def random_seq(seq_record:SeqIO.SeqRecord, out_file):
     out_file.write(">" + seq_record.description + "\n")
     size = len(seq_record)
-    #sample = list("TGAC")                  #para ácidos nucléicos
-    sample = list("ACDEFGHIKLMNPQRSTVWY")   #para aminoácidos
-    random_list = [random.choice(sample) for _ in range(size)]
+    #alphabet = list("TGAC")                  #para ácidos nucléicos
+    alphabet = list("ACDEFGHIKLMNPQRSTVWY")   #para aminoácidos
+    random_list = [random.choice(alphabet) for _ in range(size)]
     random_seq = ''.join(random_list)
     write_with_size(random_seq, out_file)
 
