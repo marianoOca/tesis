@@ -23,8 +23,13 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 
 if __name__ == "__main__":
 
-    filter_to_file("data/usp_f.fasta", "data/usp_987.fasta", lambda seq_record : len(seq_record) == 300)
-    #experiment("usp_f", complexity_id="d", cuantity = 0, mode = "feedback")
+    experiment("usp_f", "b")
+
+
+    complexity_from_files("usp_f987", "d2", 0, "feedback")
+    experiment("usp_f987", "d2", mode = "feedback")
+
+    
     '''
     calculate_complexity_from_files("prueba", complexity="b", cuantity=0)
     experiment("usp_f", complexity="d2")
