@@ -2,6 +2,24 @@ from Bio import SeqIO
 
 
 ### AUX ###
+
+def write_with_size(seq:str, out_file, size:int = 100):
+    i = size
+    while i < len(seq):
+        out_file.write(seq[i-size:i] + "\n")
+        i = i + size
+    out_file.write(seq[i-size:] + "\n\n")
+
+def make_name(prefix:str, num:int, sufix:str = "") -> str:
+    if num < 10:
+        middle = "0" + str(num)
+    else:
+        middle = str(num)
+    return prefix + middle + sufix
+
+
+## LIST <--> FILE ##
+
 def save_list_to_file(l:list, out_file):
     file = open(out_file, 'w')
     
@@ -30,40 +48,6 @@ def read_list_from_file(in_file) -> list:
             res.append(num)
     file.close()
     return res
-
-def write_with_size(seq:str, out_file, size:int = 100):
-    i = size
-    while i < len(seq):
-        out_file.write(seq[i-size:i] + "\n")
-        i = i + size
-    out_file.write(seq[i-size:] + "\n\n")
-
-def size_to_list(dataset) -> list:
-    print("\nCalculating sizes")
-    size_list = []
-    map_bio(dataset, lambda seq_record, res : res.append(len(seq_record)), size_list)
-    return size_list
-
-def filter_to_file(dataset, out_file, criteria): #ej: citeria = lambda seq_record : len(seq_record) >= 50
-    f = open(out_file, "w")
-    for seq_record in SeqIO.parse(dataset, "fasta"):
-        if (criteria(seq_record)):
-            f.write(">" + seq_record.description + "\n")
-            write_with_size(str(seq_record.seq), f)
-    f.close()
-
-def make_name(prefix:str, num:int, sufix:str = "") -> str:
-    if num < 10:
-        middle = "0" + str(num)
-    else:
-        middle = str(num)
-    return prefix + middle + sufix
-
-def count_entries(dataset):
-    res = []
-    map_bio(dataset, lambda _, res : res.append(1), res)
-    return len(res)
-
 
 ### MAP DATASET ###
 

@@ -1,4 +1,4 @@
-from base import *
+from main import *
 '''
 icalcs_shuffled = icalc_to_list("uniprot_sprot_shuffled.fasta")
 save_list_to_file(icalcs_shuffled, "icalcs_us_shuffled.txt")
@@ -22,8 +22,11 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 #save_list_to_file(icalcs_random, "icalcs_usp_f_r.txt")
 
 if __name__ == "__main__":
-    experiment("usp_f", complexity="b")
+
+    filter_to_file("data/usp_f.fasta", "data/usp_987.fasta", lambda seq_record : len(seq_record) == 300)
+    #experiment("usp_f", complexity_id="d", cuantity = 0, mode = "feedback")
     '''
+    calculate_complexity_from_files("prueba", complexity="b", cuantity=0)
     experiment("usp_f", complexity="d2")
     experiment("usp_f", complexity="d3")
     experiment("usp_f", complexity="d4")'''
