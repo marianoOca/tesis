@@ -100,7 +100,7 @@ def discrepancy(seq:str, block_size:int = 1) -> int:
     return res
 
 
-### BENNETT / Block Decomposition Method ###
+### BENNETT & Kolmogorov / Block Decomposition Method ###
 
 def bdm(seq:str) -> list:
     ro.r['source']('OACC-master/bennett.R')     # Carga el script en R
@@ -109,7 +109,7 @@ def bdm(seq:str) -> list:
 
     # Extrae la columna 'value' como lista Python del data.frame de R
     value_column = list(result.rx2('values'))
-    # Extract numeric values using a regular expression
+    # Extrae los valores numéricos usando expresiones regulares
     numbers = [float(re.search(r'[0-9.]+', str(item)).group()) for item in value_column]
     
     return numbers
