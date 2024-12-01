@@ -13,41 +13,41 @@ from complexity_metrics import *
 
 def handle_data_generation_from_list(l:list): #[exp:srt, ori:str, dest:str, seed:int]
     exp = l[0]
-    origin_file = l[1]
-    destination_file = l[2]
+    in_file = l[1]
+    out_file = l[2]
     seed = l[3]
     if   exp == "s":
-        shuffle_to_file(origin_file, destination_file, seed)
+        shuffle_to_file(in_file, out_file, seed)
     elif exp == "r":
-        random_to_file(origin_file, destination_file, seed)
+        random_to_file(in_file, out_file, seed)
     else:
         raise ValueError("exp must be \"r\" for random or \"s\" for shuffled.")
 
 def handle_complexity_from_list(l:list): #[ori:str, dest:str, complexity_id:str, mode:str]
-    working_dataset = l[0]
-    destination_file = l[1]
+    in_file = l[0]
+    out_file = l[1]
     complexity_id = l[2]
     mode = l[3]
     if  mode == "performance":
-        res = complexity_to_list(working_dataset, complexity_id)
-        save_list_to_file(res, destination_file)
+        res = complexity_to_list(in_file, complexity_id)
+        save_list_to_file(res, out_file)
     elif mode == "feedback":
-        complexity_to_file_with_feedback(working_dataset, destination_file, complexity_id)
+        complexity_to_file_with_feedback(in_file, out_file, complexity_id)
     else:
         raise ValueError("mode must be \"performance\" or \"feedback\".")
 
 
 ## COMPLEXITY TO LIST AND TO FILE ##
 
-def complexity_to_list(dataset, complexity_id:str) -> list:
+def complexity_to_list(in_file, complexity_id:str) -> list:
     res_list = []
     f = ComplexitySelector(complexity_id).function
-    map_bio(dataset, lambda seq_record, res : res.append(f(str(seq_record.seq))), res_list)
+    map_bio(in_file, lambda seq_record, res : res.append(f(str(seq_record.seq))), res_list)
     return res_list
 
-def complexity_to_file_with_feedback(working_dataset, out_file, complexity_id):
+def complexity_to_file_with_feedback(in_file, out_file, complexity_id):
     f = ComplexitySelector(complexity_id).function
-    for seq_record in SeqIO.parse(working_dataset, "fasta"):
+    for seq_record in SeqIO.parse(in_file, "fasta"):
         res = f(str(seq_record.seq))
         file = open(out_file, 'a')
         if type(res) != list:
@@ -120,6 +120,6 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
             generate_working_files(dataset_name, "s", cuantity)
             generate_working_files(dataset_name, "r", cuantity)
 
-        complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
+        #complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
         complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
         complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
