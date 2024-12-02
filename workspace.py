@@ -22,8 +22,8 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 #save_list_to_file(icalcs_random, "icalcs_usp_f_r.txt")
 
 if __name__ == "__main__":
-    
-    experiment("usp_f987", "d2", gen =  True, mode = "feedback")
+
+    experiment("usp_987", "d2", gen =  True, mode = "feedback")
 
     
     '''
