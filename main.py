@@ -81,7 +81,7 @@ def generate_working_files(dataset_name, exp:str, cuantity:int):
     files_to_generate = []
     for i in range(cuantity):
         destination_file = make_name("data/" + dataset_name + "_" + exp, i+1, ".fasta")
-        files_to_generate.append([exp, dataset_name + ".fasta", destination_file, i+1])
+        files_to_generate.append([exp, "data/" + dataset_name + ".fasta", destination_file, i+1])
 
     print("\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
     multiprocess(handle_data_generation_from_list, files_to_generate)
@@ -115,7 +115,7 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
         complexity_from_files(dataset_name + "_" + exp, complexity_id, cuantity)
     else:
         if gen:
-            sizes = size_to_list(dataset_name + ".fasta")
+            sizes = size_to_list("data/" + dataset_name + ".fasta")
             save_list_to_file(sizes, "sizes_" + dataset_name + ".txt")
             generate_working_files(dataset_name, "s", cuantity)
             generate_working_files(dataset_name, "r", cuantity)
