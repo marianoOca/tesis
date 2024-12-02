@@ -51,10 +51,10 @@ def read_list_from_file(in_file) -> list:
 
 ### MAP DATASET ###
 
-def map_bio(dataset, function, auxVar = False):
+def map_bio(in_file, function, auxVar = False):
     if auxVar == False:
-        for seq_record in SeqIO.parse(dataset, "fasta"):
+        for seq_record in SeqIO.parse(in_file, "fasta"):
             function(seq_record)
     else:
-        for seq_record in SeqIO.parse(dataset, "fasta"):
+        for seq_record in SeqIO.parse(in_file, "fasta"):
             function(seq_record, auxVar)

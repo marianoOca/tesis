@@ -120,6 +120,6 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
             generate_working_files(dataset_name, "s", cuantity)
             generate_working_files(dataset_name, "r", cuantity)
 
-        #complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
+        complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
         complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
         complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
