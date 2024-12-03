@@ -116,7 +116,7 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
     else:
         if gen:
             sizes = size_to_list("data/" + dataset_name + ".fasta")
-            save_list_to_file(sizes, "sizes_" + dataset_name + ".txt")
+            save_list_to_file(sizes, "data/sizes_" + dataset_name + ".txt")
             generate_working_files(dataset_name, "s", cuantity)
             generate_working_files(dataset_name, "r", cuantity)
 
