@@ -83,15 +83,15 @@ def get_parameters_for(selector:int, dataset_name:str):
         if   selector == 1:
             complexity = "Icalc"
             prefix = "icalc_"
-            x_range = [0.05, 0.75]
+            y_range = [0.05, 0.75]
         elif selector == 2:
             complexity = "Discrepancia"
             prefix = "discr_"
-            x_range = [0, 450]
+            y_range = [0, 450]
         elif selector == 3:
             complexity = "Discrepancia en Bloque 2"
             prefix = "disc2_"
-            x_range = [0, 450]
+            y_range = [0, 450]
         source = "results/" + prefix + dataset_name
 
         original = read_list_from_file(source + ".txt")
@@ -122,18 +122,19 @@ def get_parameters_for(selector:int, dataset_name:str):
 
         if selector == 4:
             complexity = "Kolmogorov"
-            x_range = [0, 7000]
+            y_range = [0, 7000]
         elif selector == 5:
             complexity = "Bennett"
-            x_range = [0, 17000]
+            y_range = [0, 17000]
         elif selector == 6:
             complexity = "Shannon Entropy"
-            x_range = [0, 4.5]
+            y_range = [0, 4.5]
         elif selector == 7:
-            complexity = "2nd Order Entropy"
-            x_range = [0, 9]
+            complexity = "2nd Ord. Entropy"
+            y_range = [0, 9]
         elif selector == 8:
-            complexity = "Compression length (using gzip)"
-            x_range = [0, 4500]
+            complexity = "Compression Length"
+            y_range = [0, 4500]
+
     
-    return [complexity, shuffled_results, random_results, x_range]
+    return [complexity, shuffled_results, random_results, y_range]
