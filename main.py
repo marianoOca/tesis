@@ -86,6 +86,8 @@ def generate_working_files(dataset_name, exp:str, cuantity:int):
     print("\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
     multiprocess(handle_data_generation_from_list, files_to_generate)
 
+def generate_control_files():
+
 #cuantity = 0: se está trabajando sobre el archivo original
 def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mode:str = "performance"):
     files_to_process = []

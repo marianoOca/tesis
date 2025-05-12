@@ -98,3 +98,16 @@ def random_to_file(in_file, out_file, seed = 1):
     file = open(out_file, "w")
     map_bio(in_file, random_seq, file)
     file.close()
+
+
+### CONTROL ###
+def random_seq(seq_record:SeqIO.SeqRecord, out_file):
+    out_file.write(">" + seq_record.description + "\n")
+    A_list = ["A"] * len(seq_record)
+    write_with_size(A_list, out_file)
+
+
+def single_char_to_file(in_file, out_file):
+    file = open(out_file, "w")
+    map_bio(in_file, random_seq, file)
+    file.close()
