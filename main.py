@@ -86,7 +86,10 @@ def generate_working_files(dataset_name, exp:str, cuantity:int):
     print("\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
     multiprocess(handle_data_generation_from_list, files_to_generate)
 
-def generate_control_files():
+def generate_control_files(dataset_name:str):
+    source = "data/" + dataset_name + ".fasta"
+    single_char_to_file(source, "data/singl_" + dataset_name + ".fasta")
+    sorted_to_file(source, "data/sorte_" + dataset_name + ".fasta")
 
 #cuantity = 0: se está trabajando sobre el archivo original
 def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mode:str = "performance"):
@@ -125,3 +128,6 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
         complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
         complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
         complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
+
+    complexity_from_files("singl_" + dataset_name, complexity_id)
+    complexity_from_files("sorte_" + dataset_name, complexity_id)
