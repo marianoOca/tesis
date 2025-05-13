@@ -100,14 +100,25 @@ def random_to_file(in_file, out_file, seed = 1):
     file.close()
 
 
-### CONTROL ###
-def random_seq(seq_record:SeqIO.SeqRecord, out_file):
+### CONTROL DATASET ###
+def single_char_seq(seq_record:SeqIO.SeqRecord, out_file):
     out_file.write(">" + seq_record.description + "\n")
-    A_list = ["A"] * len(seq_record)
+    A_list = "A" * len(seq_record)
     write_with_size(A_list, out_file)
-
 
 def single_char_to_file(in_file, out_file):
     file = open(out_file, "w")
-    map_bio(in_file, random_seq, file)
+    map_bio(in_file, single_char_seq, file)
+    file.close()
+
+def sorted_seq(seq_record:SeqIO.SeqRecord, out_file):
+    out_file.write(">" + seq_record.description + "\n")
+    seq_list = list(str(seq_record.seq))
+    seq_list.sort()
+    seq_ran = ''.join(seq_list)
+    write_with_size(seq_ran, out_file)
+
+def sorted_to_file(in_file, out_file):
+    file = open(out_file, "w")
+    map_bio(in_file, sorted_seq, file)
     file.close()

@@ -23,8 +23,11 @@ save_list_to_file(icalcs, "icalcs_us.txt")
 
 if __name__ == "__main__":
 
-    experiment("usp_987", "d2", gen =  True, mode = "feedback")
-
+    #experiment("usp_987", "d2", gen =  True, mode = "feedback")
+    #generate_control_files("usp_f")
+    complexity_id = "i" #["i", "d", "b"]:
+    complexity_from_files("singl_usp_f", complexity_id)
+    complexity_from_files("sorte_usp_f", complexity_id)
     
     '''
     calculate_complexity_from_files("prueba", complexity="b", cuantity=0)
