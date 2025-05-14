@@ -1,8 +1,8 @@
 import rpy2.robjects as ro
-from rpy2.robjects import pandas2ri
 import re
 
-from miscellaneous import *
+#from rpy2.robjects import pandas2ri
+#from miscellaneous import *
 
 
 class ComplexitySelector:
@@ -55,9 +55,10 @@ def icalc(seq:str) -> float:
         res += 1.0 / (1.0 + b[i])
     return res / len(b)
 
-def show_icalc(seq_record:SeqIO.SeqRecord):
-    print(seq_record.description)
-    print("Icalc: ", icalc(str(seq_record.seq)))
+#from Bio import SeqIO
+#def show_icalc(seq_record:SeqIO.SeqRecord):
+#    print(seq_record.description)
+#    print("Icalc: ", icalc(str(seq_record.seq)))
 
 
 ### DISCREPANCY ###

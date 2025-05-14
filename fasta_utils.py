@@ -1,5 +1,5 @@
 import random
-from miscellaneous import *
+from misc_utils import *
 
 
 ### COUNT ENTRIES ###
