@@ -4,7 +4,6 @@
 
 import multiprocessing as mp
 
-#from miscellaneous import *
 from fasta_utils import *
 from complexity_metrics import *
 
