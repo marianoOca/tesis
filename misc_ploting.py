@@ -1,11 +1,8 @@
 
-from miscellaneous import read_list_from_file
-from miscellaneous import make_name
+from misc_utils import read_list_from_file, make_name
 import matplotlib as mpl
 import numpy as np
 
-
-### PLOTING ###
 
 def get_boxplot_lines(data:list) -> list:
     median = np.median(data)
