@@ -1,9 +1,6 @@
 import rpy2.robjects as ro
 import re
 
-#from rpy2.robjects import pandas2ri
-#from miscellaneous import *
-
 
 class ComplexitySelector:
     def __init__(self, c_id:str):

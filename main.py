@@ -4,7 +4,6 @@
 
 import multiprocessing as mp
 
-#from miscellaneous import *
 from fasta_utils import *
 from complexity_metrics import *
 
@@ -129,6 +128,11 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
         complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
         complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
 
+    if gen:
+        generate_control_files(dataset_name)
+    if control:
+        complexity_from_files("singl_" + dataset_name, complexity_id)
+        complexity_from_files("sorte_" + dataset_name, complexity_id)
     if gen:
         generate_control_files(dataset_name)
     if control:
