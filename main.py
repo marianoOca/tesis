@@ -45,7 +45,7 @@ def complexity_to_list(in_file, complexity_id:str) -> list:
     map_bio(in_file, lambda seq_record, res : res.append(f(str(seq_record.seq))), res_list)
     return res_list
 
-def complexity_to_file_with_feedback(in_file, out_file, complexity_id):
+def complexity_to_file_with_feedback(in_file, out_file, complexity_id) -> None:
     f = ComplexitySelector(complexity_id).function
     for seq_record in SeqIO.parse(in_file, "fasta"):
         res = f(str(seq_record.seq))
@@ -77,7 +77,7 @@ def multiprocess(function, data:list) -> list:
 
 ## EXPERIMENT ##
 
-def generate_working_files(dataset_name, exp:str, cuantity:int):
+def generate_working_files(dataset_name, exp:str, cuantity:int) -> None:
     files_to_generate = []
     for i in range(cuantity):
         destination_file = make_name("data/" + dataset_name + "_" + exp, i+1, ".fasta")
@@ -86,13 +86,13 @@ def generate_working_files(dataset_name, exp:str, cuantity:int):
     print("\nGenerating " + ("shuffled" if exp == "s" else "random") + " files:")
     multiprocess(handle_data_generation_from_list, files_to_generate)
 
-def generate_control_files(dataset_name:str):
+def generate_control_files(dataset_name:str) -> None:
     source = "data/" + dataset_name + ".fasta"
     single_char_to_file(source, "data/singl_" + dataset_name + ".fasta")
     sorted_to_file(source, "data/sorte_" + dataset_name + ".fasta")
 
 #cuantity = 0: se está trabajando sobre el archivo original
-def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mode:str = "performance"):
+def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mode:str = "performance") -> None:
     files_to_process = []
     info = ComplexitySelector(complexity_id)
     if cuantity == 0:
@@ -113,7 +113,7 @@ def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mod
 #gen indica si se debe generar los datos de prueba random y/o shuffled
 #mode: "performance" para mayor performance pero el resultado sólo se va a ver al final y
 #      "feedback" para ir viendo los resultados a medida que se computan, pero va a llevar más tiempo en computar
-def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = False, cuantity:int = 10, mode:str = "performance"):
+def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = False, cuantity:int = 10, mode:str = "performance") -> None:
     if exp != "s_and_r":
         if gen:
             generate_working_files(dataset_name, exp, cuantity)
