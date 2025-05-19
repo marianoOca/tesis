@@ -113,7 +113,7 @@ def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mod
 #gen indica si se debe generar los datos de prueba random y/o shuffled
 #mode: "performance" para mayor performance pero el resultado sólo se va a ver al final y
 #      "feedback" para ir viendo los resultados a medida que se computan, pero va a llevar más tiempo en computar
-def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = False, cuantity:int = 10, mode:str = "performance") -> None:
+def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = False, control:bool = True, cuantity:int = 10, mode:str = "performance") -> None:
     if exp != "s_and_r":
         if gen:
             generate_working_files(dataset_name, exp, cuantity)
@@ -129,5 +129,8 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
         complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
         complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
 
-    complexity_from_files("singl_" + dataset_name, complexity_id)
-    complexity_from_files("sorte_" + dataset_name, complexity_id)
+    if gen:
+        generate_control_files(dataset_name)
+    if control:
+        complexity_from_files("singl_" + dataset_name, complexity_id)
+        complexity_from_files("sorte_" + dataset_name, complexity_id)
