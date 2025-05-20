@@ -133,8 +133,3 @@ def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = 
     if control:
         complexity_from_files("singl_" + dataset_name, complexity_id)
         complexity_from_files("sorte_" + dataset_name, complexity_id)
-    if gen:
-        generate_control_files(dataset_name)
-    if control:
-        complexity_from_files("singl_" + dataset_name, complexity_id)
-        complexity_from_files("sorte_" + dataset_name, complexity_id)

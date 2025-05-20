@@ -1,25 +1,4 @@
 from main import *
-'''
-icalcs_shuffled = icalc_to_list("uniprot_sprot_shuffled.fasta")
-save_list_to_file(icalcs_shuffled, "icalcs_us_shuffled.txt")
-
-icalcs_random = icalc_to_list("uniprot_sprot_random.fasta")
-save_list_to_file(icalcs_random, "icalcs_us_random.txt")
-
-icalcs = icalc_to_list("uniprot_sprot.fasta")
-save_list_to_file(icalcs, "icalcs_us.txt")
-'''
-#sort_to_file("uniprot_sprot_original.fasta", "uniprot_sprot.fasta")
-
-### TRABAJO ###
-#icalcs = Icalc_to_list("proteinnet7.fasta")
-#filter_to_file("uniprot_sprot.fasta", "usp_f.fasta")
-#save_list_to_file(icalcs, "icalcs_proteinnet7.txt")
-#random_to_file("ls_orchid.fasta","ls_orchid_random.fasta")
-#random_to_file("usp_f.fasta", "usp_f_r.fasta")
-
-#icalcs_random = icalc_to_list("usp_f_r.fasta")
-#save_list_to_file(icalcs_random, "icalcs_usp_f_r.txt")
 
 if __name__ == "__main__":
 
@@ -42,6 +21,27 @@ if __name__ == "__main__":
     #print(complexity_to_list("ls_orchid_r05.fasta", "d"))
     #print(size_to_list("ls_orchid.fasta"))
 
+'''
+icalcs_shuffled = icalc_to_list("uniprot_sprot_shuffled.fasta")
+save_list_to_file(icalcs_shuffled, "icalcs_us_shuffled.txt")
+
+icalcs_random = icalc_to_list("uniprot_sprot_random.fasta")
+save_list_to_file(icalcs_random, "icalcs_us_random.txt")
+
+icalcs = icalc_to_list("uniprot_sprot.fasta")
+save_list_to_file(icalcs, "icalcs_us.txt")
+'''
+#sort_to_file("uniprot_sprot_original.fasta", "uniprot_sprot.fasta")
+
+### TRABAJO ###
+#icalcs = Icalc_to_list("proteinnet7.fasta")
+#filter_to_file("uniprot_sprot.fasta", "usp_f.fasta")
+#save_list_to_file(icalcs, "icalcs_proteinnet7.txt")
+#random_to_file("ls_orchid.fasta","ls_orchid_random.fasta")
+#random_to_file("usp_f.fasta", "usp_f_r.fasta")
+
+#icalcs_random = icalc_to_list("usp_f_r.fasta")
+#save_list_to_file(icalcs_random, "icalcs_usp_f_r.txt")
 
 
 #shuffle_to_file("usp_f.fasta", "usp_f_s05.fasta")
