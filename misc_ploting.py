@@ -56,9 +56,9 @@ def get_parameters_for(selector:int, dataset_name:str):
             y_range = [0, 450]
         source = "results/" + prefix + dataset_name
 
-        original = read_list_from_file(source + ".txt")
-        shuffled_results = [original]
-        random_results = [original]
+        original_resuts = read_list_from_file(source + ".txt")
+        shuffled_results = []
+        random_results = []
 
         for i in range(1,11):
             shuffled_result = make_name(source + "_s", i, ".txt")
@@ -72,9 +72,9 @@ def get_parameters_for(selector:int, dataset_name:str):
     else:
         decom_data = read_list_from_file("results/decom_usp_f.csv")
 
-        original = [row[selector - 4] for row in decom_data]
-        shuffled_results = [original]
-        random_results = [original]
+        original_resuts = [row[selector - 4] for row in decom_data]
+        shuffled_results = []
+        random_results = []
 
         for i in range(1,11):
             shuffled_result = make_name("results/decom_usp_f_s", i, ".csv")
@@ -106,4 +106,4 @@ def get_parameters_for(selector:int, dataset_name:str):
             complexity = "Compression Length"
             y_range = [0, 4500]
 
-    return [complexity, shuffled_results, random_results, single_char_results, sorted_results, y_range]
+    return [complexity, original_resuts, shuffled_results, random_results, single_char_results, sorted_results, y_range]
