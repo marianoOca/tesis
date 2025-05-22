@@ -3,7 +3,7 @@ from Bio import SeqIO
 
 ### AUX ###
 
-def write_with_size(seq:str, out_file, size:int = 100):
+def write_with_size(seq:str, out_file:str, size:int = 100) -> None:
     i = size
     while i < len(seq):
         out_file.write(seq[i-size:i] + "\n")
@@ -20,7 +20,7 @@ def make_name(prefix:str, num:int, sufix:str = "") -> str:
 
 ## LIST <--> FILE ##
 
-def save_list_to_file(l:list, out_file):
+def save_list_to_file(l:list, out_file:str) -> None:
     file = open(out_file, 'w')
     
     if type(l[0]) != list:
@@ -31,7 +31,7 @@ def save_list_to_file(l:list, out_file):
             file.write(",".join(map(str, row)) + "\n")
     file.close()
 
-def read_list_from_file(in_file) -> list:
+def read_list_from_file(in_file:str) -> list:
     res = []
     file =  open(in_file, 'r')
     if in_file[len(in_file)-4:] == ".csv":
@@ -52,7 +52,7 @@ def read_list_from_file(in_file) -> list:
 
 ### MAP DATASET ###
 
-def map_bio(in_file, function, auxVar = False):
+def map_bio(in_file:str, function, auxVar = False) -> None:
     if auxVar == False:
         for seq_record in SeqIO.parse(in_file, "fasta"):
             function(seq_record)

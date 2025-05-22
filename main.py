@@ -10,7 +10,7 @@ from complexity_metrics import *
 
 ## SOME KIND OF CURRY ## NOT FOR USER ##
 
-def handle_data_generation_from_list(l:list): #[exp:srt, ori:str, dest:str, seed:int]
+def handle_data_generation_from_list(l:list) -> None: #[exp:srt, ori:str, dest:str, seed:int]
     exp = l[0]
     in_file = l[1]
     out_file = l[2]
@@ -22,7 +22,7 @@ def handle_data_generation_from_list(l:list): #[exp:srt, ori:str, dest:str, seed
     else:
         raise ValueError("exp must be \"r\" for random or \"s\" for shuffled.")
 
-def handle_complexity_from_list(l:list): #[ori:str, dest:str, complexity_id:str, mode:str]
+def handle_complexity_from_list(l:list) -> None: #[ori:str, dest:str, complexity_id:str, mode:str]
     in_file = l[0]
     out_file = l[1]
     complexity_id = l[2]
@@ -38,13 +38,13 @@ def handle_complexity_from_list(l:list): #[ori:str, dest:str, complexity_id:str,
 
 ## COMPLEXITY TO LIST AND TO FILE ##
 
-def complexity_to_list(in_file, complexity_id:str) -> list:
+def complexity_to_list(in_file:str, complexity_id:str) -> list:
     res_list = []
     f = ComplexitySelector(complexity_id).function
     map_bio(in_file, lambda seq_record, res : res.append(f(str(seq_record.seq))), res_list)
     return res_list
 
-def complexity_to_file_with_feedback(in_file, out_file, complexity_id) -> None:
+def complexity_to_file_with_feedback(in_file:str, out_file:str, complexity_id:str) -> None:
     f = ComplexitySelector(complexity_id).function
     for seq_record in SeqIO.parse(in_file, "fasta"):
         res = f(str(seq_record.seq))
@@ -76,7 +76,7 @@ def multiprocess(function, data:list) -> list:
 
 ## EXPERIMENT ##
 
-def generate_working_files(dataset_name, exp:str, cuantity:int) -> None:
+def generate_working_files(dataset_name:str, exp:str, cuantity:int) -> None:
     files_to_generate = []
     for i in range(cuantity):
         destination_file = make_name("data/" + dataset_name + "_" + exp, i+1, ".fasta")
@@ -91,7 +91,7 @@ def generate_control_files(dataset_name:str) -> None:
     sorted_to_file(source, "data/sorte_" + dataset_name + ".fasta")
 
 #cuantity = 0: se está trabajando sobre el archivo original
-def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mode:str = "performance") -> None:
+def complexity_from_files(dataset_name:str, complexity_id:str, cuantity:int = 0, mode:str = "performance") -> None:
     files_to_process = []
     info = ComplexitySelector(complexity_id)
     if cuantity == 0:
@@ -112,7 +112,7 @@ def complexity_from_files(dataset_name, complexity_id:str, cuantity:int = 0, mod
 #gen indica si se debe generar los datos de prueba random y/o shuffled
 #mode: "performance" para mayor performance pero el resultado sólo se va a ver al final y
 #      "feedback" para ir viendo los resultados a medida que se computan, pero va a llevar más tiempo en computar
-def experiment(dataset_name, complexity_id:str, exp:str = "s_and_r", gen:bool = False, control:bool = True, cuantity:int = 10, mode:str = "performance") -> None:
+def experiment(dataset_name:str, complexity_id:str, exp:str = "s_and_r", gen:bool = False, control:bool = True, cuantity:int = 10, mode:str = "performance") -> None:
     if exp != "s_and_r":
         if gen:
             generate_working_files(dataset_name, exp, cuantity)

@@ -40,7 +40,7 @@ def get_colormap() -> mpl.colors.ListedColormap:
     newcolors[:1, :] = white
     return ListedColormap(newcolors)
 
-def get_parameters_for(selector:int, dataset_name:str):
+def get_parameters_for(selector:int, dataset_name:str) -> list:
     if   selector < 4:
         if   selector == 1:
             complexity = "Icalc"
