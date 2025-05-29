@@ -15,8 +15,8 @@ def get_boxplot_lines(data:list) -> list:
     upper_whisker = upper_quartile+(1.5*iqr)
     lower_whisker = lower_quartile-(1.5*iqr)
 
-    upper_whisker = max([e for e in data if e < upper_whisker])
-    lower_whisker = min([e for e in data if e > lower_whisker])
+    upper_whisker = max([e for e in data if e <= upper_whisker])
+    lower_whisker = min([e for e in data if e >= lower_whisker])
 
     return [upper_whisker, upper_quartile, median, lower_quartile, lower_whisker]
 
