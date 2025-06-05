@@ -76,9 +76,9 @@ def multiprocess(function, data:list) -> list:
 
 ## EXPERIMENT ##
 
-def generate_working_files(dataset_name:str, exp:str, cuantity:int) -> None:
+def generate_working_files(dataset_name:str, exp:str, quantity:int) -> None:
     files_to_generate = []
-    for i in range(cuantity):
+    for i in range(quantity):
         destination_file = make_name("data/" + dataset_name + "_" + exp, i+1, ".fasta")
         files_to_generate.append([exp, "data/" + dataset_name + ".fasta", destination_file, i+1])
 
@@ -90,20 +90,20 @@ def generate_control_files(dataset_name:str) -> None:
     single_char_to_file(source, "data/singl_" + dataset_name + ".fasta")
     sorted_to_file(source, "data/sorte_" + dataset_name + ".fasta")
 
-#cuantity = 0: se está trabajando sobre el archivo original
-def complexity_from_files(dataset_name:str, complexity_id:str, cuantity:int = 0, mode:str = "performance") -> None:
+#quantity = 0: se está trabajando sobre el archivo original
+def complexity_from_files(dataset_name:str, complexity_id:str, quantity:int = 0, mode:str = "performance") -> None:
     files_to_process = []
     info = ComplexitySelector(complexity_id)
-    if cuantity == 0:
+    if quantity == 0:
         print("\nCalculating " + info.name + " from orginial dataset")
         handle_complexity_from_list(["data/" + dataset_name + ".fasta", "results/" + info.prefix + dataset_name + info.extension, complexity_id, mode])
     else:
-        for i in range(cuantity):
+        for i in range(quantity):
             working_dataset = make_name("data/" + dataset_name, i+1, ".fasta")
             destination_file = make_name("results/" + info.prefix + dataset_name, i+1, info.extension)
             files_to_process.append([working_dataset, destination_file, complexity_id, mode])
 
-        print("\nCalculating " + info.name + " for " + str(cuantity) + " files:")
+        print("\nCalculating " + info.name + " for " + str(quantity) + " files:")
         multiprocess(handle_complexity_from_list, files_to_process)
 
 
@@ -112,21 +112,21 @@ def complexity_from_files(dataset_name:str, complexity_id:str, cuantity:int = 0,
 #gen indica si se debe generar los datos de prueba random y/o shuffled
 #mode: "performance" para mayor performance pero el resultado sólo se va a ver al final y
 #      "feedback" para ir viendo los resultados a medida que se computan, pero va a llevar más tiempo en computar
-def experiment(dataset_name:str, complexity_id:str, exp:str = "s_and_r", gen:bool = False, control:bool = True, cuantity:int = 10, mode:str = "performance") -> None:
+def experiment(dataset_name:str, complexity_id:str, exp:str = "s_and_r", gen:bool = False, control:bool = True, quantity:int = 10, mode:str = "performance") -> None:
     if exp != "s_and_r":
         if gen:
-            generate_working_files(dataset_name, exp, cuantity)
-        complexity_from_files(dataset_name + "_" + exp, complexity_id, cuantity)
+            generate_working_files(dataset_name, exp, quantity)
+        complexity_from_files(dataset_name + "_" + exp, complexity_id, quantity)
     else:
         if gen:
             sizes = size_to_list("data/" + dataset_name + ".fasta")
             save_list_to_file(sizes, "data/sizes_" + dataset_name + ".txt")
-            generate_working_files(dataset_name, "s", cuantity)
-            generate_working_files(dataset_name, "r", cuantity)
+            generate_working_files(dataset_name, "s", quantity)
+            generate_working_files(dataset_name, "r", quantity)
 
         complexity_from_files(dataset_name, complexity_id, 0, mode = mode)
-        complexity_from_files(dataset_name + "_s", complexity_id, cuantity, mode)
-        complexity_from_files(dataset_name + "_r", complexity_id, cuantity, mode)
+        complexity_from_files(dataset_name + "_s", complexity_id, quantity, mode)
+        complexity_from_files(dataset_name + "_r", complexity_id, quantity, mode)
 
     if gen:
         generate_control_files(dataset_name)
