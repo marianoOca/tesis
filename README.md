@@ -29,16 +29,12 @@ install.packages("acss")
 
 ## ▶️ Usage
 
-This project can work with any FASTA dataset of amioacid sequences. It can also be adapted for nucleic acids with minimal changes*.
+This project can work with any FASTA dataset of amioacid sequences. It can also be adapted for nucleic acids with minimal changes¹.
 
 We used Reviewed (Swiss-Prot) from [UniProt](https://www.uniprot.org/help/downloads).
 
 - Example use cases can be found in `workspace.py`.
 - Full function documentation is available in the appendix of `Tesis_Mariano_Oca.pdf`.
-
-> \* Modifications required for:
-> - `discrepancy()` in `complexity_metrics.py` (line 84)
-> - `random_seq()` in `fasta_utils.py` (line 87)
 
 
 ### ⚙️ Running Recomendations
@@ -55,3 +51,6 @@ Then execute it with:
 ```bash
 nohup ./execute.sh &
 ```
+
+
+> \[1] Specifically: `discrepancy()` in `complexity_metrics.py` (line 84) and `random_seq()` in `fasta_utils.py` (line 87).
