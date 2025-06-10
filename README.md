@@ -54,3 +54,28 @@ nohup ./execute.sh &
 
 
 > \[1] Specifically: `discrepancy()` in `complexity_metrics.py` (line 84) and `random_seq()` in `fasta_utils.py` (line 87).
+
+
+## 📁 Repository Structure
+
+- **`data/`** – Contains all working files in `.fasta` format along with their corresponding sequence length references in `.txt` format. For example, for the dataset `usp_f.fasta`, the file `sizes_usp_f.txt` contains the lengths of each sequence in order of appearance.
+
+- **`OACC-master/`** – Includes part of the [Online Algorithmic Complexity Calculator](http://www.complexity-calculator.com/) project, used to compute Kolmogorov, Bennett, Shannon complexities, second-order entropy and compression length.
+
+- **`results/`** – Stores the output results from all experiments.
+
+- **`complexity_metrics.py`** – Definition of complexity metrics and the `ComplexitySelector` class, which allows selecting a specific metric and retrieving related configuration and metadata.
+
+- **`fasta_utils.py`** – Utilities for easier handling and processing of FASTA files.
+
+- **`main.py`** – Main script that runs the core experimental workflow.
+
+- **`misc_ploting.py`** – Auxiliary plotting functions used for generating visualizations of experiment results.
+
+- **`misc_utils.py`** – Helper functions used internally by `fasta_utils.py`.
+
+- **`polting_boxplot.ipynb`** – Boxplots, mainly visualizing dataset sequence length distributions.
+
+- **`polting.ipynb`** – Pre-defined plots for each complexity metric.
+
+- **`workspace.py`** – Example Python script for interactive experimentation with the tool.
