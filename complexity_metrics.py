@@ -110,4 +110,13 @@ def bdm(seq:str) -> list:
     # Extrae los valores numéricos usando expresiones regulares
     numbers = [float(re.search(r'[0-9.]+', str(item)).group()) for item in value_column]
     
-    return numbers
+    return numbers # = [ "BDM algorithmic complexity estimation",
+#                        "BDM logical depth estimation",
+#                        "Shannon entropy",
+#                        "Second order entropy",
+#                        "Compression length (using gzip)",
+#                        "String length",
+#                        "# of symbols in string",
+#                        "# of symbols in CTM alphabet",
+#                        "Block size",
+#                        "Block overlap"]
