@@ -36,9 +36,20 @@ def get_colormap() -> mpl.colors.ListedColormap:
     #Set colormap (un quilombo)
     magma = mpl.colormaps['magma'].resampled(256)
     newcolors = magma(np.linspace(0, 1, 100000))
-    white = np.array([256/256, 256/256, 256/256, 1]) # color en formato rgb: [R/256, G/256, B/256, 1]
-    newcolors[:1, :] = white
+    transparent = np.array([256/256, 256/256, 256/256, 0]) # color en formato rgb: [R/256, G/256, B/256, alpha], lo pongo en 0 para que sea transparente
+    newcolors[:1, :] = transparent
     return ListedColormap(newcolors)
+
+def set_grid(axes, log_x = False):
+    for a in axes:
+        if isinstance(a, mpl.axes.Axes): #esto es necesario porque axs y plt manejan la grilla de forma distinta
+            a.set_axisbelow(True)
+        else:
+            a.gca().set_axisbelow(True)
+        a.grid(which='major', linestyle='-', alpha=0.4)
+        if log_x:
+            a.minorticks_on()
+            a.grid(which='minor', linestyle=':', alpha=0.3)
 
 def get_parameters_for(selector:int, dataset_name:str) -> list:
     if   selector < 4:
