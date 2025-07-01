@@ -40,23 +40,35 @@ def get_colormap() -> mpl.colors.ListedColormap:
     newcolors[:1, :] = transparent
     return ListedColormap(newcolors)
 
-def set_grid(axes, log_x = False):
+def set_grid(axes):
     for a in axes:
         if isinstance(a, mpl.axes.Axes): #esto es necesario porque axs y plt manejan la grilla de forma distinta
             a.set_axisbelow(True)
         else:
             a.gca().set_axisbelow(True)
         a.grid(which='major', linestyle='-', alpha=0.4)
-        if log_x:
-            a.minorticks_on()
-            a.grid(which='minor', linestyle=':', alpha=0.3)
+        a.minorticks_on()
+        a.grid(which='minor', linestyle=':', alpha=0.3)
+
+def draw_boxplot(dataset:list) -> str:
+    lines = get_boxplot_lines(dataset)
+    return "|" +str(lines[0])[:7]+ "--[" +str(lines[1])[:7]+ "|" +str(lines[2])[:7]+ "]" +str(lines[3])[:7]+ "--|" +str(lines[4])[:7]
+
+def print_boxplot_lines(shuffled_dataset, random_dataset = None, original_dataset = None) -> None:
+    if random_dataset is None:
+        print("Boxplot lines: " + draw_boxplot(shuffled_dataset))
+    else:
+        print("Boxplot lines Shuffled: " + draw_boxplot(shuffled_dataset))
+        print("Boxplot lines Random  : " + draw_boxplot(random_dataset))
+    if original_dataset is not None:
+        print("Boxplot lines Original: " + draw_boxplot(original_dataset))
 
 def get_parameters_for(selector:int, dataset_name:str) -> list:
     if   selector < 4:
         if   selector == 1:
             complexity = "Icalc"
             prefix = "icalc_"
-            y_range = [0.05, 0.75]
+            y_range = [0, 0.72]
         elif selector == 2:
             complexity = "Discrepancia"
             prefix = "discr_"
